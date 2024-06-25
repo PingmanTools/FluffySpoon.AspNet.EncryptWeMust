@@ -9,11 +9,11 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Persistence
 {
 	public class FileChallengePersistenceStrategy : IChallengePersistenceStrategy
 	{
-		private readonly string _relativeFilePath;
+		private readonly string _challengeFilePath;
 
-		public FileChallengePersistenceStrategy(string relativeFilePath)
+		public FileChallengePersistenceStrategy(string challengeFilePath)
 		{
-			_relativeFilePath = relativeFilePath;
+			_challengeFilePath = challengeFilePath;
 		}
 
 		public async Task DeleteAsync(IEnumerable<ChallengeDto> challenges)
@@ -60,7 +60,7 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Persistence
 
 		private string GetChallengesStorePath()
 		{
-			return _relativeFilePath + "_Challenges";
+			return _challengeFilePath + "_Challenges";
 		}
 	}
 }
