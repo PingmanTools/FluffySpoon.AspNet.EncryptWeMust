@@ -28,7 +28,7 @@ jobs:
       # with:
         # dotnet-version: 3.1.x
     - name: Pack
-      run: dotnet pack src/PingmanTools.AspNet.EncryptWeMust/PingManTools.AspNet.EncryptWeMust.csproj --configuration Release /p:Version=1.0.1 --no-build --output .
+      run: dotnet pack ./src/PingmanTools.AspNet.EncryptWeMust/PingManTools.AspNet.EncryptWeMust.csproj --configuration Release /p:Version=1.0.1 --no-build --output .
     - name: Publish the package to nuget.org
       env:
         nuget_auth_token: ${{ secrets.nuget_token }}
