@@ -7,7 +7,7 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Certificates
     /// </summary>
     public interface IPersistableCertificate : IAbstractCertificate
     {
-        public byte[] RawData { get; }
+        byte[] RawData { get; }
     }
     
     /// <summary>

@@ -4,7 +4,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using FluffySpoon.AspNet.EncryptWeMust.Certificates;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using static FluffySpoon.AspNet.EncryptWeMust.Certificates.CertificateRenewalStatus;
 
@@ -15,7 +14,6 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Certes
 		private readonly ICertificateProvider _certificateProvider;
 		private readonly IEnumerable<ICertificateRenewalLifecycleHook> _lifecycleHooks;
 		private readonly ILogger<ILetsEncryptRenewalService> _logger;
-		private readonly IHostApplicationLifetime _lifetime;
 		private readonly SemaphoreSlim _semaphoreSlim;
 		private readonly LetsEncryptOptions _options;
 
@@ -24,19 +22,17 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Certes
 		public LetsEncryptRenewalService(
 			ICertificateProvider certificateProvider,
 			IEnumerable<ICertificateRenewalLifecycleHook> lifecycleHooks,
-			IHostApplicationLifetime lifetime,
 			ILogger<ILetsEncryptRenewalService> logger,
 			LetsEncryptOptions options)
 		{
 			_certificateProvider = certificateProvider;
 			_lifecycleHooks = lifecycleHooks;
-			_lifetime = lifetime;
 			_logger = logger;
 			_options = options;
 			_semaphoreSlim = new SemaphoreSlim(1);
 		}
 
-		internal static IAbstractCertificate Certificate { get; private set; }
+		public static IAbstractCertificate Certificate { get; private set; }
 		
 		public Uri LetsEncryptUri => _options.LetsEncryptUri;
 		
@@ -55,8 +51,8 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Certes
 				await lifecycleHook.OnStartAsync();
 
 			_timer = new Timer(async state => await RunOnceWithErrorHandlingAsync(), null, Timeout.InfiniteTimeSpan, TimeSpan.FromHours(1));
-			
-			_lifetime.ApplicationStarted.Register(() => OnApplicationStarted(cancellationToken));
+
+			OnApplicationStarted(cancellationToken);
 		}
 
 		public async Task StopAsync(CancellationToken cancellationToken)
@@ -82,24 +78,19 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Certes
 				if (result.Status != Unchanged)
 				{
 					// Preload intermediate certs before exposing certificate to the Kestrel
-					using var chain = new X509Chain
+					using (var chain = new X509Chain { ChainPolicy = { RevocationMode = X509RevocationMode.NoCheck } })
 					{
-						ChainPolicy =
+						if (result.Certificate is LetsEncryptX509Certificate x509cert)
 						{
-							RevocationMode = X509RevocationMode.NoCheck
-						}
-					};
-
-					if (result.Certificate is LetsEncryptX509Certificate x509cert)
-					{
-						if (chain.Build(x509cert.GetCertificate()))
-						{
-							_logger.LogInformation("Successfully built certificate chain");
-						}
-						else
-						{
-							_logger.LogWarning(
-								"Was not able to build certificate chain. This can cause an outage of your app.");
+							if (chain.Build(x509cert.GetCertificate()))
+							{
+								_logger.LogInformation("Successfully built certificate chain");
+							}
+							else
+							{
+								_logger.LogWarning(
+									"Was not able to build certificate chain. This can cause an outage of your app.");
+							}
 						}
 					}
 				}

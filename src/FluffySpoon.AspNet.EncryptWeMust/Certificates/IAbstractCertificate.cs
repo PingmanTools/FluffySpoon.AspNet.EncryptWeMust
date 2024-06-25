@@ -7,8 +7,8 @@ namespace FluffySpoon.AspNet.EncryptWeMust.Certificates
     /// </summary>
     public interface IAbstractCertificate
     {
-        public DateTime NotAfter { get; }
-        public DateTime NotBefore { get; }
+        DateTime NotAfter { get; }
+        DateTime NotBefore { get; }
         string Thumbprint { get; }
     }
 }
