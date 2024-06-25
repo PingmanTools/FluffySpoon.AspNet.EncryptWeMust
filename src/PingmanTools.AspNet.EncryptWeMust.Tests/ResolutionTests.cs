@@ -1,6 +1,5 @@
 using System;
 using Certes;
-using FluffySpoon.AspNet.EncryptWeMust;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,7 @@ namespace PingmanTools.AspNet.EncryptWeMust.Tests
                 .ConfigureLogging(options => options.AddConsole())
                 .ConfigureServices(services =>
                 {
-                    services.AddFluffySpoonLetsEncrypt(new LetsEncryptOptions()
+                    services.AddLetsEncrypt(new LetsEncryptOptions
                     {
                         Email = "some-email@github.com",
                         UseStaging = true,
@@ -36,10 +35,10 @@ namespace PingmanTools.AspNet.EncryptWeMust.Tests
                         }
                     });
 
-                    services.AddFluffySpoonLetsEncryptFileCertificatePersistence();
-                    services.AddFluffySpoonLetsEncryptFileChallengePersistence();
+                    services.AddLetsEncryptFileCertificatePersistence();
+                    services.AddLetsEncryptFileChallengePersistence();
                 })
-                .Configure(appBuilder => { appBuilder.UseFluffySpoonLetsEncrypt(); })
+                .Configure(appBuilder => { appBuilder.UseLetsEncrypt(); })
                 .Build();
 
             thing.Services.GetRequiredService<ILetsEncryptRenewalService>();

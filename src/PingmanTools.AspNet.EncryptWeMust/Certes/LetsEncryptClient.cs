@@ -18,7 +18,7 @@ namespace PingmanTools.AspNet.EncryptWeMust.Certes
     
     public class LetsEncryptClient : ILetsEncryptClient
     {
-        private const string CertificateFriendlyName = "FluffySpoonAspNetLetsEncryptCertificate";
+        private const string CertificateFriendlyName = "PingmanToolsAspNetLetsEncryptCertificate";
 
         private readonly ILogger _logger;
         private readonly IAcmeContext _acme;
@@ -93,7 +93,7 @@ namespace PingmanTools.AspNet.EncryptWeMust.Certes
 			
             pfxBuilder.FullChain = true;
 
-            var pfxBytes = pfxBuilder.Build(CertificateFriendlyName, nameof(FluffySpoon));
+            var pfxBytes = pfxBuilder.Build(CertificateFriendlyName, nameof(EncryptWeMust));
 
             _logger.LogInformation("Certificate acquired.");
 

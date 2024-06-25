@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>PingmanTools.EncryptWeMust</id>
+    <version>1.0.1</version>
+    <title>PingmanTools.EncryptWeMust</title>
+    <authors>Pingman Tools</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/PingmanTools/PingmanTools.AspNet.EncryptWeMust/blob/master/LICENSE</licenseUrl>
+    <readme>https://github.com/PingmanTools/PingmanTools.AspNet.EncryptWeMust/blob/master/README.md</readme>
+    <projectUrl>https://github.com/PingmanTools/PingmanTools.AspNet.EncryptWeMust</projectUrl>
+    <description>A .NET Standard 2.0 library that extends ASP.NET Core with capabilities for interacting with Let's Encrypt. This library facilitates the ordering, challenge response, and management of Let's Encrypt certificates, including their persistence and retrieval.</description>
+  </metadata>
+  <files>
+    <file src=".\README.md" target="" />
+  </files>
+</package>

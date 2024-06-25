@@ -15,7 +15,7 @@ namespace PingmanTools.AspNet.EncryptWeMust.Certificates
 
         public LetsEncryptX509Certificate(byte[] data)
         {
-            _certificate = new X509Certificate2(data, nameof(FluffySpoon));
+            _certificate = new X509Certificate2(data, nameof(EncryptWeMust));
             RawData = data;
         }
 

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Certes;
 using Certes.Acme;
-using FluffySpoon.AspNet.EncryptWeMust;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,7 +39,7 @@ namespace PingmanTools.AspNet.EncryptWeMust.Tests
             _webHostBuilder = WebHost.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddFluffySpoonLetsEncrypt(new LetsEncryptOptions()
+                    services.AddLetsEncrypt(new LetsEncryptOptions()
                     {
                         Email = "some-email@github.com",
                         UseStaging = true,
@@ -56,8 +55,8 @@ namespace PingmanTools.AspNet.EncryptWeMust.Tests
                         }
                     });
 
-                    services.AddFluffySpoonLetsEncryptMemoryCertficatesPersistence();
-                    services.AddFluffySpoonLetsEncryptMemoryChallengePersistence();
+                    services.AddLetsEncryptMemoryCertficatesPersistence();
+                    services.AddLetsEncryptMemoryChallengePersistence();
 
                     // mock communication with LetsEncrypt
                     services.Remove(services.Single(x => x.ServiceType == typeof(ILetsEncryptClientFactory)));
@@ -67,7 +66,7 @@ namespace PingmanTools.AspNet.EncryptWeMust.Tests
                 {
                     app.UseDeveloperExceptionPage();
                     
-                    app.UseFluffySpoonLetsEncrypt();
+                    app.UseLetsEncrypt();
                     
                     app.Run(async context =>
                     {

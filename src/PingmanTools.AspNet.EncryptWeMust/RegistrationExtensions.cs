@@ -1,26 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-
-using System.Runtime.CompilerServices;
-using PingmanTools.AspNet.EncryptWeMust;
 using PingmanTools.AspNet.EncryptWeMust.Certes;
 using PingmanTools.AspNet.EncryptWeMust.Certificates;
 using PingmanTools.AspNet.EncryptWeMust.Persistence;
 
-[assembly:InternalsVisibleTo("FluffySpoon.AspNet.EncryptWeMust.Tests")]
-
-// ReSharper disable once CheckNamespace
-namespace FluffySpoon.AspNet.EncryptWeMust
+namespace PingmanTools.AspNet.EncryptWeMust
 {
 	public static class RegistrationExtensions
 	{
-		private static void AddFluffySpoonLetsEncryptPersistenceService(
+		private static void AddLetsEncryptPersistenceService(
 			this IServiceCollection services)
 		{
 			if(services.Any(x => x.ServiceType == typeof(IPersistenceService)))
@@ -29,108 +23,108 @@ namespace FluffySpoon.AspNet.EncryptWeMust
 			services.AddSingleton<IPersistenceService, PersistenceService>();
 		}
 
-		public static void AddFluffySpoonLetsEncryptRenewalLifecycleHook<TCertificateRenewalLifecycleHook>(
+		public static void AddLetsEncryptRenewalLifecycleHook<TCertificateRenewalLifecycleHook>(
 			this IServiceCollection services) where TCertificateRenewalLifecycleHook : class, ICertificateRenewalLifecycleHook
 		{
-			services.AddFluffySpoonLetsEncryptPersistenceService();
+			services.AddLetsEncryptPersistenceService();
 			services.AddSingleton<ICertificateRenewalLifecycleHook, TCertificateRenewalLifecycleHook>();
 		}
 
-		public static void AddFluffySpoonLetsEncryptCertificatePersistence(
+		public static void AddLetsEncryptCertificatePersistence(
 			this IServiceCollection services,
 			Func<CertificateType, byte[], Task> persistAsync,
 			Func<CertificateType, Task<byte[]>> retrieveAsync)
 		{
-			AddFluffySpoonLetsEncryptCertificatePersistence(services,
+			AddLetsEncryptCertificatePersistence(services,
 				new CustomCertificatePersistenceStrategy(
 					persistAsync,
 					retrieveAsync));
 		}
 
-		public static void AddFluffySpoonLetsEncryptCertificatePersistence(
+		public static void AddLetsEncryptCertificatePersistence(
 		  this IServiceCollection services,
 		  ICertificatePersistenceStrategy certificatePersistenceStrategy)
 		{
-			AddFluffySpoonLetsEncryptCertificatePersistence(services,
+			AddLetsEncryptCertificatePersistence(services,
 				(p) => certificatePersistenceStrategy);
 		}
 
-		public static void AddFluffySpoonLetsEncryptCertificatePersistence(
+		public static void AddLetsEncryptCertificatePersistence(
 		  this IServiceCollection services,
 		  Func<IServiceProvider, ICertificatePersistenceStrategy> certificatePersistenceStrategyFactory)
 		{
-			services.AddFluffySpoonLetsEncryptPersistenceService();
+			services.AddLetsEncryptPersistenceService();
 			services.AddSingleton(certificatePersistenceStrategyFactory);
 		}
 
-		public static void AddFluffySpoonLetsEncryptFileCertificatePersistence(
+		public static void AddLetsEncryptFileCertificatePersistence(
 		  this IServiceCollection services,
-		  string relativeFilePath = "FluffySpoonAspNetLetsEncryptCertificate")
+		  string relativeFilePath = "PingmnanToolsAspNetLetsEncryptCertificate")
 		{
-			AddFluffySpoonLetsEncryptCertificatePersistence(services,
+			AddLetsEncryptCertificatePersistence(services,
 				new FileCertificatePersistenceStrategy(relativeFilePath));
 		}
 
-		public static void AddFluffySpoonLetsEncryptChallengePersistence(
+		public static void AddLetsEncryptChallengePersistence(
 			this IServiceCollection services,
 			PersistChallengesDelegate persistAsync,
 			RetrieveChallengesDelegate retrieveAsync,
 			DeleteChallengesDelegate deleteAsync)
 		{
-			AddFluffySpoonLetsEncryptChallengePersistence(services,
+			AddLetsEncryptChallengePersistence(services,
 				new CustomChallengePersistenceStrategy(
 					persistAsync,
 					retrieveAsync,
 					deleteAsync));
 		}
 
-		public static void AddFluffySpoonLetsEncryptChallengePersistence(
+		public static void AddLetsEncryptChallengePersistence(
 		  this IServiceCollection services,
 		  IChallengePersistenceStrategy certificatePersistenceStrategy)
 		{
-			AddFluffySpoonLetsEncryptChallengePersistence(services,
+			AddLetsEncryptChallengePersistence(services,
 				(p) => certificatePersistenceStrategy);
 		}
 
-		public static void AddFluffySpoonLetsEncryptChallengePersistence(
+		public static void AddLetsEncryptChallengePersistence(
 		  this IServiceCollection services,
 		  Func<IServiceProvider, IChallengePersistenceStrategy> certificatePersistenceStrategyFactory)
 		{
-			services.AddFluffySpoonLetsEncryptPersistenceService();
+			services.AddLetsEncryptPersistenceService();
 			services.AddSingleton(certificatePersistenceStrategyFactory);
 		}
 
-		public static void AddFluffySpoonLetsEncryptFileChallengePersistence(
+		public static void AddLetsEncryptFileChallengePersistence(
 		  this IServiceCollection services,
-		  string relativeFilePath = "FluffySpoonAspNetLetsEncryptChallenge")
+		  string relativeFilePath = "PingmanToolsAspNetLetsEncryptChallenge")
 		{
-			AddFluffySpoonLetsEncryptChallengePersistence(services,
+			AddLetsEncryptChallengePersistence(services,
 				new FileChallengePersistenceStrategy(relativeFilePath));
 		}
 
-		public static void AddFluffySpoonLetsEncryptMemoryChallengePersistence(
+		public static void AddLetsEncryptMemoryChallengePersistence(
 		  this IServiceCollection services)
 		{	
-			AddFluffySpoonLetsEncryptChallengePersistence(
+			AddLetsEncryptChallengePersistence(
 				services,
 				new MemoryChallengePersistenceStrategy());
 		}
 
-		public static void AddFluffySpoonLetsEncryptMemoryCertficatesPersistence(
+		public static void AddLetsEncryptMemoryCertficatesPersistence(
 		  this IServiceCollection services)
 		{
-			AddFluffySpoonLetsEncryptCertificatePersistence(
+			AddLetsEncryptCertificatePersistence(
 				services,
 				new MemoryCertificatePersistenceStrategy());
 		}
 
-		public static void AddFluffySpoonLetsEncrypt(
+		public static void AddLetsEncrypt(
 		  this IServiceCollection services,
 		  LetsEncryptOptions options)
 		{
             services.AddTransient<IConfigureOptions<KestrelServerOptions>, KestrelOptionsSetup>();
 
-			services.AddFluffySpoonLetsEncryptPersistenceService();
+			services.AddLetsEncryptPersistenceService();
 
 			services.AddSingleton(options);
 
@@ -142,7 +136,7 @@ namespace FluffySpoon.AspNet.EncryptWeMust
 			services.AddTransient<IHostedService, LetsEncryptRenewalService>();			
 		}
 
-		public static void UseFluffySpoonLetsEncrypt(
+		public static void UseLetsEncrypt(
 			this IApplicationBuilder app)
 		{
 			app.UseMiddleware<LetsEncryptChallengeApprovalMiddleware>();

@@ -27,7 +27,7 @@ jobs:
     # - uses: actions/setup-dotnet@v4
       # with:
         # dotnet-version: 3.1.x
-    # - name: Publish the package to nuget.org
-      # env:
-        # NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
-      # run: dotnet nuget push */bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+    - name: Publish the package to nuget.org
+      env:
+        nuget_auth_token: ${{ secrets.nuget_token }}
+      run: dotnet nuget push */bin/release/*.nupkg -k $nuget_auth_token -s https://api.nuget.org/v3/index.json

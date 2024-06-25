@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FluffySpoon.AspNet.EncryptWeMust\PingmanTools.AspNet.EncryptWeMust.csproj" />
       <ProjectReference Include="..\PingmanTools.AspNet.EncryptWeMust\PingmanTools.AspNet.EncryptWeMust.csproj" />
     </ItemGroup>
 
