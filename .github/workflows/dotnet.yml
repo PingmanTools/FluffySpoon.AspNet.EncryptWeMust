@@ -32,4 +32,4 @@ jobs:
     - name: Publish the package to nuget.org
       env:
         nuget_auth_token: ${{ secrets.nuget_token }}
-      run: dotnet nuget push */bin/release/*.nupkg -k $nuget_auth_token -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push PingmanTools.AspNet.EncryptWeMust.1.0.1.nupkg -k $nuget_auth_token -s https://api.nuget.org/v3/index.json
